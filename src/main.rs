@@ -2,7 +2,6 @@ use std::env;
 
 mod configuration;
 mod elf_explorer;
-mod elf_explorer;
 
 // args[1] configuration file
 fn main() {
@@ -11,6 +10,7 @@ fn main() {
         eprint!("Missing configuration file name!\n");
         std::process::exit(1);
     }
+
     let config = configuration::Configuration::load_from_file(&args[1]);
 
     for file in &config.libraries {
