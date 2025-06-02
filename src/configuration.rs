@@ -3,9 +3,9 @@ use std::fs;
 use yaml_rust2::YamlLoader;
 
 pub struct Configuration {
-    libraries: Vec<String>,
-    excluded_libraries: Vec<String>,
-    libraries_path: String
+    pub libraries: Vec<String>,
+    pub excluded_libraries: Vec<String>,
+    pub libraries_path: String
 }
 
 impl Configuration {
