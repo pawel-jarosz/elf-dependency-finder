@@ -1,8 +1,7 @@
-
-
 mod elf_file;
 
 use std::collections::HashMap;
+use goblin::elf::Elf;
 use walkdir::WalkDir;
 
 pub use elf_file::{ElfFile, ElfType};
@@ -22,15 +21,26 @@ impl SoFileExplorer {
         let found_libraries = 0_usize;
         for entry in WalkDir::new(path).follow_links(true) {
             let entry = entry.unwrap();
-            if entry.path().file_name().unwrap().to_str().unwrap().ends_with(".so") {
-                
-            }
+            let filename = entry.file_name().to_str().unwrap();
+            let path_to_file = entry.path().to_str().unwrap();
 
+            let has_so_extension = filename.contains(".so");
+            if has_so_extension {
+                let elf_file = ElfFile::new(path_to_file);
+
+                if elf_file.filename != filename {
+                    println!("{} != {}", elf_file.filename, filename);
+                }
+                
+                let is_available = self.available_libraries.contains_key(&elf_file.filename);
+                if  is_available {
+                    self.available_libraries.get_mut(filename).unwrap().1.push(path_to_file.to_string());
+                }
+            }
         }
-        4
+        found_libraries
     }
 }
-
 
 
 pub fn find_dependencies(elf_file: &ElfFile, library_paths: &String) -> Vec<ElfFile> {
